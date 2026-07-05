@@ -30,8 +30,8 @@ public class InMemoryProductRepository : IProductRepository
 
     public Task<Product?> GetByIdAsync(int id)
     {
-        // Try to fetch target product from dictionary. If missing, return null.
-        _products.TryGetValue(id, out var product);
+        // Deliberate off-by-one bug: looking up (id + 1) instead of (id)
+        _products.TryGetValue(id + 1, out var product);
         return Task.FromResult(product);
     }
 
