@@ -1,3 +1,4 @@
+using Catalog.Api.Options;
 using Catalog.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ builder.Services.AddControllers();
 // Swagger endpoints validation aur swagger metadata documentation generator service register kar rahe hain
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// CatalogOptions pattern ko configure aur register kar rahe hain appsettings.json section "Catalog" ke sath.
+builder.Services.Configure<CatalogOptions>(builder.Configuration.GetSection(CatalogOptions.SectionName));
 
 // In-Memory Repository ko DI (Dependency Injection) container me Singleton ki tarah register kar rahe hain,
 // taaki iski state/data unique rahe aur across API requests persist kare.

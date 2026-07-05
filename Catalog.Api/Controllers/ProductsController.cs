@@ -1,7 +1,9 @@
 using Catalog.Api.DTOs;
 using Catalog.Api.Models;
+using Catalog.Api.Options;
 using Catalog.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Catalog.Api.Controllers;
 
@@ -12,20 +14,24 @@ namespace Catalog.Api.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;
+    private readonly CatalogOptions _options;
 
-    // Dependency Injection ke through IProductRepository inject kar rahe hain
-    public ProductsController(IProductRepository productRepository)
+    // Dependency Injection ke through IProductRepository aur CatalogOptions inject kar rahe hain
+    public ProductsController(IProductRepository productRepository, IOptions<CatalogOptions> options)
     {
         _productRepository = productRepository;
+        _options = options.Value;
     }
 
     // GET: api/products
-    // Sabhi products fetch karne ka asynchronous endpoint.
+    // Sabhi products fetch karne ka asynchronous endpoint. appsettings.json me configured DefaultPageSize key se records constraint kiye gaye hain.
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetAll()
     {
         var products = await _productRepository.GetAllAsync();
-        return Ok(products);
+        // default settings se top N records return karenge
+        var limitedProducts = products.Take(_options.DefaultPageSize);
+        return Ok(limitedProducts);
     }
 
     // GET: api/products/{id}
