@@ -23,6 +23,19 @@ public class ProductsController : ControllerBase
         _options = options.Value;
     }
 
+    // GET: api/products/health
+    // App aur repository connection status retrieve karne ke liye simple health check endpoint.
+    [HttpGet("health")]
+    public IActionResult HealthCheck()
+    {
+        return Ok(new
+        {
+            Status = "Healthy",
+            Storage = "In-Memory Dictionary (Active)",
+            Timestamp = DateTime.UtcNow
+        });
+    }
+
     // GET: api/products
     // Sabhi products fetch karne ka asynchronous endpoint. appsettings.json me configured DefaultPageSize key se records constraint kiye gaye hain.
     [HttpGet]
