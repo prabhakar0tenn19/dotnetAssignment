@@ -1,3 +1,5 @@
+using Catalog.Api.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,10 @@ builder.Services.AddControllers();
 // Swagger endpoints validation aur swagger metadata documentation generator service register kar rahe hain
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// In-Memory Repository ko DI (Dependency Injection) container me Singleton ki tarah register kar rahe hain,
+// taaki iski state/data unique rahe aur across API requests persist kare.
+builder.Services.AddSingleton<IProductRepository, InMemoryProductRepository>();
 
 var app = builder.Build();
 
