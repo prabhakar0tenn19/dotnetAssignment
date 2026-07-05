@@ -66,12 +66,13 @@
   ```
 * `ProductsController` के कंस्ट्रक्टर में `IOptions<CatalogOptions>` इंजेक्ट किया और `GET /api/products` एंडपॉइंट पर रिटर्न होने वाले प्रोडक्ट्स की संख्या को `Take(_options.DefaultPageSize)` से लिमिट किया।
 
-### Step 5: CRUD Endpoints (कंट्रोलर एंडपॉइंट्स)
+### Step 5: CRUD & Health Endpoints (कंट्रोलर एंडपॉइंट्स)
+* **GET `/api/products/health`**: प्रोजेक्ट का हेल्थ स्टेटस (JSON) रिटर्न करता है (200 OK)।
 * **GET `/api/products`**: कॉन्फ़िगरेशन साइज़ (DefaultPageSize) के हिसाब से प्रोडक्ट्स की लिस्ट रिटर्न करता है (200 OK)।
 * **GET `/api/products/{id}`**: ID से सर्च करके प्रोडक्ट रिटर्न करता है। मिलने पर 200 OK, न मिलने पर 404 Not Found।
-* **POST `/api/products`**: नया प्रोडक्ट इंसर्ट करता है। इनपुट वैलिडेशन पर 400 Bad Request और सक्सेस पर `CreatedAtAction` का उपयोग करके `201 Created` स्टेटस कोड और लोकेशन हेडर रिटर्न करता है।
+* **POST `/api/products`**: नया प्रोडक्ट इंसर्ट करता. इनपुट वैलिडेशन पर 400 Bad Request और सक्सेस पर `CreatedAtAction` का उपयोग करके `201 Created` स्टेटस कोड और लोकेशन हेडर रिटर्न करता है।
 * **PUT `/api/products/{id}`**: स्पेसिफिक ID वाले प्रोडक्ट की डिटेल्स को DTO से अपडेट करता है। सक्सेस होने पर 204 No Content और न मिलने पर 404 Not Found।
-* **DELETE `/api/products/{id}`**: प्रोडक्ट को रिमूव करता है। सक्सेस पर 204 No Content और न मिलने पर 404 Not Found।
+* **DELETE `/api/products/{id}`**: Product को रिमूव करता है। सक्सेस पर 204 No Content और न मिलने पर 404 Not Found।
 
 ---
 
@@ -100,3 +101,11 @@ dotnet run --project Catalog.Api
 * डिफ़ॉल्ट रूप से इन-मेमोरी रिपोजिटरी में 3 प्रोडक्ट्स सीड हैं।
 * जब आप `GET /api/products` पर रिक्वेस्ट भेजेंगे, तो यह सिर्फ **2** प्रोडक्ट्स रिटर्न करेगा, क्योंकि `appsettings.json` में `DefaultPageSize` की वैल्यू `2` सेट है।
 * यह सत्यापित (verify) करता है कि Options Pattern सही तरीके से कॉन्फ़िगर और इंजेक्ट हुआ है।
+
+### 5. Run Unit Tests (यूनिट टेस्ट चलाएं)
+xUnit प्रोजेक्ट `Catalog.Api.Tests` में लिखे गए टेस्ट को रन करने के लिए:
+```bash
+dotnet test Catalog.Api.Tests
+```
+यह टेस्ट करता है कि जब कोई प्रोडक्ट ID मौजूद नहीं होती है, तो API सही तरीके से **404 Not Found** रिटर्न करता है।
+
